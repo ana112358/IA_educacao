@@ -1,97 +1,101 @@
-feedback_types:
-
-  - name: "autonomy"
-    description: "Incentiva o aluno a assumir o controle do próprio aprendizado, explorando os temas por conta própria ou definindo seus próprios objetivos."
-    message: "Você está progredindo bem em {item}. Que tal explorar esse conteúdo por conta própria para se aprofundar ainda mais?"
-
-  - name: "competence"
-    description: "Afirma a capacidade do aluno em dominar o conteúdo, destacando os pontos fortes e o progresso."
-    message: "Você demonstrou muita habilidade em {item}! Continue com esse ótimo trabalho."
-
-  - name: "relatedness"
-    description: "Faz o aluno se sentir acolhido e apoiado, normalizando dificuldades e sugerindo colaboração."
-    message: "Muitos estudantes acham {item} desafiador. Você não está sozinho — podemos enfrentar isso juntos."
-
-  - name: "urgent"
-    description: "Indica que o aluno precisa de atenção imediata em conceitos fundamentais, devido a erros em questões fáceis."
-    message: "Atenção: você teve dificuldades em questões fáceis de {item}. Vamos revisar os fundamentos para construir uma base mais sólida."
-
-  - name: "review"
-    description: "Sugere revisar o tema para fortalecer a compreensão, especialmente nos conceitos mais difíceis."
-    message: "Considere revisar {item}, principalmente os conceitos mais avançados, para melhorar sua compreensão."
+ffeedback_types:
+  - name: "reinforcement_positive"
+    description: "Fornece reforço positivo imediato para respostas corretas, com base na teoria do condicionamento clássico."
+    message: "Parabéns! Você acertou mais uma questão sobre {item}! Continue assim!"
+  
+  - name: "personalized_feedback"
+    description: "Oferece feedback personalizado para incentivar a melhoria e sugerir áreas específicas para revisão."
+    message: "Percebemos que você teve dificuldades com {item}. Que tal revisar esse tópico com esse resumo para melhorar sua compreensão?"
+  
+  - name: "adaptive_suggestions"
+    description: "Sugere ajustar o nível de dificuldade com base no desempenho, oferecendo tópicos mais fáceis ou desafiadores."
+    message: "Agora que você tem dominado {item}, que tal tentar um desafio mais difícil sobre esse tema? Vamos em frente!"
+  
+  - name: "progress_tracking"
+    description: "Fornece feedback sobre o progresso do aluno, reforçando o senso de conquista e engajamento contínuo."
+    message: "Você está indo muito bem! Já completou {percentual}% do seu progresso no tópico {item}. Continue assim!"
+  
+  - name: "supportive_language"
+    description: "Usa uma linguagem acessível, empática e de apoio, considerando o histórico e a cultura do aluno."
+    message: "Muitos estudantes enfrentam desafios com {item}, mas você está fazendo ótimos avanços. Você vai conseguir!"
 
 feedback_rules:
-
-  - name: "Relatedness: Baixo desempenho em Atributos e Métodos"
-    condition:
-      type: "less_than"
-      left: "performance.topics['Atributos e Métodos'].percent_correct_easy_questions"
-      right: 50.0
-    action:
-      feedback_relatedness["Atributos e Métodos"]: 1
-    description: "Aluno teve desempenho muito baixo no tópico mesmo com questões fáceis."
-
-  - name: "Competência: Bom desempenho em Encapsulamento"
-    condition:
-      type: "greater_than"
-      left: "performance.topics['Encapsulamento'].percent_correct_medium_questions"
-      right: 80.0
-    action:
-      feedback_competence["Encapsulamento"]: 1
-    description: "Aluno acertou todas as questões médias de Encapsulamento."
-
-  - name: "Urgente: Problemas com fácil em Princípios SOLID"
-    condition:
-      type: "and"
-      conditions:
-        - type: "greater_than"
-          left: "performance.topics['Princípios SOLID'].percent_correct_easy_questions"
-          right: 0
-        - type: "less_than"
-          left: "performance.topics['Princípios SOLID'].percent_correct_easy_questions"
-          right: 50.0
-    action:
-      feedback_urgent["Princípios SOLID"]: 1
-    description: "Aluno errou questão fácil sobre princípios fundamentais."
-
-  - name: "Revisão: Herança com foco em difícil"
-    condition:
-      type: "and"
-      conditions:
-        - type: "greater_than"
-          left: "performance.topics['Herança'].percent_correct_hard_questions"
-          right: 0
-        - type: "less_than"
-          left: "performance.topics['Herança'].percent_correct_medium_questions"
-          right: 50.0
-    action:
-      feedback_review["Herança"]: 1
-    description: "Mesmo acertando questão difícil, aluno foi mal nas médias — revisar pode ajudar."
-
-  - name: "Autonomia: Progresso médio em Interfaces"
+  # Rules based on topic performance
+  - name: "Reinforcement for consecutive correct answers"
     condition:
       type: "and"
       conditions:
         - type: "greater_than_or_equal"
-          left: "performance.topics['Interfaces'].percent_correct_easy_questions"
-          right: 50.0
-        - type: "less_than"
-          left: "performance.topics['Interfaces'].percent_correct_medium_questions"
-          right: 80.0
+          left: "performance.topics[topic].total_questions"
+          right: 2
+        - type: "greater_than_or_equal"
+          left: "performance.topics[topic].correct_streak"
+          right: 3
     action:
-      feedback_autonomy["Interfaces"]: 1
-    description: "Aluno com progresso estável pode se beneficiar de estudo independente em Interfaces."
+      feedback_reinforcement_positive[topic]: 1
+    description: "Fornece reforço positivo quando o aluno responde corretamente três ou mais questões consecutivas em um tópico."
 
-  - name: "Autonomia: Progresso moderado na área Java"
+  - name: "Personalized feedback for recurring mistakes"
     condition:
       type: "and"
       conditions:
         - type: "greater_than_or_equal"
-          left: "performance.areas['Java'].percent_correct_easy_questions"
-          right: 50.0
-        - type: "less_than"
-          left: "performance.areas['Java'].percent_correct_medium_questions"
+          left: "performance.topics[topic].total_questions"
+          right: 2
+        - type: "greater_than_or_equal"
+          left: "performance.topics[topic].incorrect_streak"
+          right: 2
+    action:
+      feedback_personalized_feedback[topic]: 1
+    description: "Oferece feedback personalizado sugerindo revisão de conteúdo após dois ou mais erros consecutivos em um tópico."
+
+  - name: "Adaptive suggestions for performance improvement"
+    condition:
+      type: "and"
+      conditions:
+        - type: "greater_than_or_equal"
+          left: "performance.topics[topic].total_questions"
+          right: 5
+        - type: "greater_than"
+          left: "performance.topics[topic].percent_correct"
           right: 80.0
     action:
-      feedback_autonomy["Java"]: 1
-    description: "Na média, progresso é positivo mas pode melhorar com estudo independente."
+      feedback_adaptive_suggestions[topic]: 1
+    description: "Sugere tópicos mais desafiadores quando o desempenho excede 80% de respostas corretas em um tópico."
+
+  - name: "Progress tracking and encouragement"
+    condition:
+      type: "and"
+      conditions:
+        - type: "greater_than_or_equal"
+          left: "performance.topics[topic].total_questions"
+          right: 2
+    action:
+      feedback_progress_tracking[topic]: 1
+    description: "Fornece feedback sobre o progresso quando o aluno completou pelo menos duas questões em um tópico."
+
+  - name: "Supportive language for struggling topics"
+    condition:
+      type: "and"
+      conditions:
+        - type: "less_than"
+          left: "performance.topics[topic].percent_correct"
+          right: 50.0
+    action:
+      feedback_supportive_language[topic]: 1
+    description: "Usa uma linguagem de apoio para encorajar o aluno quando seu desempenho estiver abaixo de 50% em um tópico."
+
+  # Additional area-level feedback rules
+  - name: "Review for low performance in an area"
+    condition:
+      type: "and"
+      conditions:
+        - type: "greater_than_or_equal"
+          left: "performance.areas[area].total_questions"
+          right: 3
+        - type: "less_than"
+          left: "performance.areas[area].percent_correct"
+          right: 60.0
+    action:
+      feedback_review[area]: 1
+    description: "Sugere revisar a área quando o desempenho estiver abaixo de 60% de respostas corretas nas questões dessa área."

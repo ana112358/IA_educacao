@@ -1,82 +1,101 @@
-
-id: learner_2025_ana
-
-answers:
-  "101": "C"
-  "102": "A"
-  "103": "D"
-  "104": "B"
-  "105": "C"
-  "106": "A"
-  "107": "E"
-  "108": "C"
-  "109": "B"
-  "110": "A"
-  "111": "C"
-  "112": "D"
-
-performance:
-  topics:
-    Classes e Objetos:
-      total_questions: 2
-      percent_correct_easy_questions: 100.0
-      percent_correct_medium_questions: 50.0
-      percent_correct_hard_questions: 0.0
-      points: 25
-
-    Atributos e Métodos:
-      total_questions: 1
-      percent_correct_easy_questions: 0.0
-      percent_correct_medium_questions: 0.0
-      percent_correct_hard_questions: 0.0
-      points: 0
-
-    Encapsulamento:
-      total_questions: 2
-      percent_correct_easy_questions: 100.0
-      percent_correct_medium_questions: 100.0
-      percent_correct_hard_questions: 0.0
-      points: 30
-
-    Herança:
-      total_questions: 1
-      percent_correct_easy_questions: 0.0
-      percent_correct_medium_questions: 0.0
-      percent_correct_hard_questions: 100.0
-      points: 15
-
-    Polimorfismo:
-      total_questions: 1
-      percent_correct_easy_questions: 0.0
-      percent_correct_medium_questions: 0.0
-      percent_correct_hard_questions: 0.0
-      points: 0
-
-    Interfaces:
-      total_questions: 2
-      percent_correct_easy_questions: 50.0
-      percent_correct_medium_questions: 50.0
-      percent_correct_hard_questions: 0.0
-      points: 20
-
-    Princípios SOLID:
-      total_questions: 1
-      percent_correct_easy_questions: 0.0
-      percent_correct_medium_questions: 0.0
-      percent_correct_hard_questions: 0.0
-      points: 0
-
-    Organização do Código:
-      total_questions: 2
-      percent_correct_easy_questions: 100.0
-      percent_correct_medium_questions: 50.0
-      percent_correct_hard_questions: 0.0
-      points: 25
-
-  areas:
-    Java:
-      total_questions: 12
-      percent_correct_easy_questions: 66.7
-      percent_correct_medium_questions: 41.7
-      percent_correct_hard_questions: 8.3
-      points: 115
+learner:
+  description: "Esquema para o perfil de um único aluno e dados de desempenho"
+  type: dict
+  properties:
+    id:
+      type: string
+      description: "Identificador único para o aluno (ex: UUID ou ID incremental)"
+      example: "learner_001"
+    
+    answers:
+      type: dict
+      description: "Respostas do aluno para as questões (chave: ID da questão, valor: A/B/C/D/E)"
+      example: { "1": "A", "2": "B", "3": "C" }
+    
+    performance:
+      type: dict
+      description: "Métricas de desempenho por tópico e área"
+      properties:
+        topics:
+          type: dict
+          description: "Métricas para cada tópico específico (ex: crase, pontuação, sintaxe)"
+          value:
+            type: dict
+            properties:
+              total_questions:
+                type: int
+                description: "Número de questões respondidas para este tópico"
+                min: 0
+              percent_correct_easy_questions:
+                type: float
+                description: "Percentual de acertos em questões fáceis deste tópico"
+                range: [0.0, 100.0]
+              percent_correct_medium_questions:
+                type: float
+                description: "Percentual de acertos em questões médias deste tópico"
+                range: [0.0, 100.0]
+              percent_correct_high_questions:
+                type: float
+                description: "Percentual de acertos em questões difíceis deste tópico"
+                range: [0.0, 100.0]
+              points:
+                type: int
+                description: "Total de pontos ganhos neste tópico"
+                min: 0
+        areas:
+          type: dict
+          description: "Métricas para cada área principal (ex: Crase, Pontuação, Sintaxe)"
+          value:
+            type: dict
+            properties:
+              total_questions:
+                type: int
+                description: "Número de questões respondidas nesta área"
+                min: 0
+              percent_correct_easy_questions:
+                type: float
+                description: "Percentual de acertos em questões fáceis desta área"
+                range: [0.0, 100.0]
+              percent_correct_medium_questions:
+                type: float
+                description: "Percentual de acertos em questões médias desta área"
+                range: [0.0, 100.0]
+              percent_correct_high_questions:
+                type: float
+                description: "Percentual de acertos em questões difíceis desta área"
+                range: [0.0, 100.0]
+              points:
+                type: int
+                description: "Total de pontos ganhos nesta área"
+                min: 0
+    
+    feedback:
+      type: dict
+      description: "Dados de feedback relacionados ao progresso do aluno"
+      properties:
+        recent_feedback:
+          type: string
+          description: "Última mensagem de feedback fornecida ao aluno"
+          example: "Você acertou 3 questões de crase. Continue assim!"
+        last_revision_suggestion:
+          type: string
+          description: "Último tópico ou área sugerida para revisão"
+          example: "Revisar sintaxe."
+    
+    tutor_rules:
+      type: dict
+      description: "Regras para fornecer feedback com base no desempenho"
+      properties:
+        consecutive_incorrect_errors:
+          type: int
+          description: "Número de erros consecutivos em um tópico que ativa uma sugestão de revisão"
+          example: 2
+        consecutive_correct_answers:
+          type: int
+          description: "Número de acertos consecutivos em um tópico que ativa reforço positivo"
+          example: 3
+        low_percentage_in_topic:
+          type: float
+          description: "Limite de baixo desempenho em um tópico (abaixo do qual é recomendada revisão)"
+          range: [0.0, 100.0]
+          example: 50.0

@@ -1,0 +1,97 @@
+feedback_types:
+
+  - name: "autonomy"
+    description: "Incentiva o aluno a assumir o controle do próprio aprendizado, explorando os temas por conta própria ou definindo seus próprios objetivos."
+    message: "Você está progredindo bem em {item}. Que tal explorar esse conteúdo por conta própria para se aprofundar ainda mais?"
+
+  - name: "competence"
+    description: "Afirma a capacidade do aluno em dominar o conteúdo, destacando os pontos fortes e o progresso."
+    message: "Você demonstrou muita habilidade em {item}! Continue com esse ótimo trabalho."
+
+  - name: "relatedness"
+    description: "Faz o aluno se sentir acolhido e apoiado, normalizando dificuldades e sugerindo colaboração."
+    message: "Muitos estudantes acham {item} desafiador. Você não está sozinho — podemos enfrentar isso juntos."
+
+  - name: "urgent"
+    description: "Indica que o aluno precisa de atenção imediata em conceitos fundamentais, devido a erros em questões fáceis."
+    message: "Atenção: você teve dificuldades em questões fáceis de {item}. Vamos revisar os fundamentos para construir uma base mais sólida."
+
+  - name: "review"
+    description: "Sugere revisar o tema para fortalecer a compreensão, especialmente nos conceitos mais difíceis."
+    message: "Considere revisar {item}, principalmente os conceitos mais avançados, para melhorar sua compreensão."
+
+feedback_rules:
+
+  - name: "Relatedness: Baixo desempenho em Atributos e Métodos"
+    condition:
+      type: "less_than"
+      left: "performance.topics['Atributos e Métodos'].percent_correct_easy_questions"
+      right: 50.0
+    action:
+      feedback_relatedness["Atributos e Métodos"]: 1
+    description: "Aluno teve desempenho muito baixo no tópico mesmo com questões fáceis."
+
+  - name: "Competência: Bom desempenho em Encapsulamento"
+    condition:
+      type: "greater_than"
+      left: "performance.topics['Encapsulamento'].percent_correct_medium_questions"
+      right: 80.0
+    action:
+      feedback_competence["Encapsulamento"]: 1
+    description: "Aluno acertou todas as questões médias de Encapsulamento."
+
+  - name: "Urgente: Problemas com fácil em Princípios SOLID"
+    condition:
+      type: "and"
+      conditions:
+        - type: "greater_than"
+          left: "performance.topics['Princípios SOLID'].percent_correct_easy_questions"
+          right: 0
+        - type: "less_than"
+          left: "performance.topics['Princípios SOLID'].percent_correct_easy_questions"
+          right: 50.0
+    action:
+      feedback_urgent["Princípios SOLID"]: 1
+    description: "Aluno errou questão fácil sobre princípios fundamentais."
+
+  - name: "Revisão: Herança com foco em difícil"
+    condition:
+      type: "and"
+      conditions:
+        - type: "greater_than"
+          left: "performance.topics['Herança'].percent_correct_hard_questions"
+          right: 0
+        - type: "less_than"
+          left: "performance.topics['Herança'].percent_correct_medium_questions"
+          right: 50.0
+    action:
+      feedback_review["Herança"]: 1
+    description: "Mesmo acertando questão difícil, aluno foi mal nas médias — revisar pode ajudar."
+
+  - name: "Autonomia: Progresso médio em Interfaces"
+    condition:
+      type: "and"
+      conditions:
+        - type: "greater_than_or_equal"
+          left: "performance.topics['Interfaces'].percent_correct_easy_questions"
+          right: 50.0
+        - type: "less_than"
+          left: "performance.topics['Interfaces'].percent_correct_medium_questions"
+          right: 80.0
+    action:
+      feedback_autonomy["Interfaces"]: 1
+    description: "Aluno com progresso estável pode se beneficiar de estudo independente em Interfaces."
+
+  - name: "Autonomia: Progresso moderado na área Java"
+    condition:
+      type: "and"
+      conditions:
+        - type: "greater_than_or_equal"
+          left: "performance.areas['Java'].percent_correct_easy_questions"
+          right: 50.0
+        - type: "less_than"
+          left: "performance.areas['Java'].percent_correct_medium_questions"
+          right: 80.0
+    action:
+      feedback_autonomy["Java"]: 1
+    description: "Na média, progresso é positivo mas pode melhorar com estudo independente."

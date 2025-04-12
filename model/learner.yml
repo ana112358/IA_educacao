@@ -1,0 +1,82 @@
+
+id: learner_2025_ana
+
+answers:
+  "101": "C"
+  "102": "A"
+  "103": "D"
+  "104": "B"
+  "105": "C"
+  "106": "A"
+  "107": "E"
+  "108": "C"
+  "109": "B"
+  "110": "A"
+  "111": "C"
+  "112": "D"
+
+performance:
+  topics:
+    Classes e Objetos:
+      total_questions: 2
+      percent_correct_easy_questions: 100.0
+      percent_correct_medium_questions: 50.0
+      percent_correct_hard_questions: 0.0
+      points: 25
+
+    Atributos e Métodos:
+      total_questions: 1
+      percent_correct_easy_questions: 0.0
+      percent_correct_medium_questions: 0.0
+      percent_correct_hard_questions: 0.0
+      points: 0
+
+    Encapsulamento:
+      total_questions: 2
+      percent_correct_easy_questions: 100.0
+      percent_correct_medium_questions: 100.0
+      percent_correct_hard_questions: 0.0
+      points: 30
+
+    Herança:
+      total_questions: 1
+      percent_correct_easy_questions: 0.0
+      percent_correct_medium_questions: 0.0
+      percent_correct_hard_questions: 100.0
+      points: 15
+
+    Polimorfismo:
+      total_questions: 1
+      percent_correct_easy_questions: 0.0
+      percent_correct_medium_questions: 0.0
+      percent_correct_hard_questions: 0.0
+      points: 0
+
+    Interfaces:
+      total_questions: 2
+      percent_correct_easy_questions: 50.0
+      percent_correct_medium_questions: 50.0
+      percent_correct_hard_questions: 0.0
+      points: 20
+
+    Princípios SOLID:
+      total_questions: 1
+      percent_correct_easy_questions: 0.0
+      percent_correct_medium_questions: 0.0
+      percent_correct_hard_questions: 0.0
+      points: 0
+
+    Organização do Código:
+      total_questions: 2
+      percent_correct_easy_questions: 100.0
+      percent_correct_medium_questions: 50.0
+      percent_correct_hard_questions: 0.0
+      points: 25
+
+  areas:
+    Java:
+      total_questions: 12
+      percent_correct_easy_questions: 66.7
+      percent_correct_medium_questions: 41.7
+      percent_correct_hard_questions: 8.3
+      points: 115
